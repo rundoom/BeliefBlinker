@@ -1,7 +1,7 @@
 import io.ktor.http.cio.websocket.Frame
 import kotlinx.coroutines.channels.SendChannel
 
-val registeredChannels = mutableSetOf<SendChannel<Frame>>()
+private val registeredChannels = mutableSetOf<SendChannel<Frame>>()
 
 fun registerChannel(chanel: SendChannel<Frame>) {
     registeredChannels.add(chanel)
