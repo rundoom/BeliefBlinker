@@ -1,0 +1,121 @@
+@font-face {
+    font-family: fonts;
+    src: url(fonts/fonts);
+}
+@font-face {
+    font-family: BukhariScript-Regular;
+    src: url(fonts/BukhariScript-Regular.otf);
+}
+@font-face {
+    font-family: CRL____;
+    src: url(fonts/CRL____.otf);
+}
+@font-face {
+    font-family: Dobrozrachniy-Regular;
+    src: url(fonts/Dobrozrachniy-Regular.otf);
+}
+@font-face {
+    font-family: Ekran-font;
+    src: url(fonts/Ekran-font.otf);
+}
+@font-face {
+    font-family: FXC;
+    src: url(fonts/FXC.otf);
+}
+@font-face {
+    font-family: GUERRILLA-Normal;
+    src: url(fonts/GUERRILLA-Normal.otf);
+}
+@font-face {
+    font-family: Hermann-Gotisch_NormalC;
+    src: url(fonts/Hermann-Gotisch_NormalC.otf);
+}
+@font-face {
+    font-family: LATINWID;
+    src: url(fonts/LATINWID.otf);
+}
+@font-face {
+    font-family: LineaturaSemibold;
+    src: url(fonts/LineaturaSemibold.otf);
+}
+@font-face {
+    font-family: MADE_TheArtist_Sans_PERSONAL_USE;
+    src: url(fonts/MADE_TheArtist_Sans_PERSONAL_USE.otf);
+}
+@font-face {
+    font-family: NeueMachina-Ultrabold;
+    src: url(fonts/NeueMachina-Ultrabold.otf);
+}
+@font-face {
+    font-family: Oks_Free;
+    src: url(fonts/Oks_Free.otf);
+}
+@font-face {
+    font-family: Peace Sans;
+    src: url(fonts/Peace_Sans.otf);
+}
+@font-face {
+    font-family: Perfograma;
+    src: url(fonts/Perfograma.otf);
+}
+@font-face {
+    font-family: POSTER;
+    src: url(fonts/POSTER.otf);
+}
+@font-face {
+    font-family: PRAGHW3;
+    src: url(fonts/PRAGHW3.otf);
+}
+@font-face {
+    font-family: ProUN;
+    src: url(fonts/ProUN.otf);
+}
+@font-face {
+    font-family: Queen of Clubs;
+    src: url(fonts/Queen_of_Clubs.otf);
+}
+@font-face {
+    font-family: RodchenkoCTT_Regular;
+    src: url(fonts/RodchenkoCTT_Regular.otf);
+}
+@font-face {
+    font-family: Silverfake;
+    src: url(fonts/Silverfake.otf);
+}
+@font-face {
+    font-family: Soyuz_Grotesk_Bold;
+    src: url(fonts/Soyuz_Grotesk_Bold.otf);
+}
+@font-face {
+    font-family: Start_Normal;
+    src: url(fonts/Start_Normal.otf);
+}
+@font-face {
+    font-family: Stiff_Staff;
+    src: url(fonts/Stiff_Staff.otf);
+}
+@font-face {
+    font-family: TOO;
+    src: url(fonts/TOO.otf);
+}
+
+:root {
+    background-color: black;
+}
+
+.blink_me {
+    animation: blinker 0.2s linear infinite;
+    text-align: center;
+    font-size: 12vw;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
