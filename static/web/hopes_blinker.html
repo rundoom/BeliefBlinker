@@ -57,7 +57,7 @@
         });
 
         socket.addEventListener('message', event => {
-            wordSet.push(event.data);
+            wordSet.add(event.data);
             wordCurrentSet.push(event.data);
         });
 
