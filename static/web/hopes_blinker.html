@@ -40,19 +40,16 @@
         elem.innerText = wordCurrentSet.pop();
     }, 429);
 
-    let timerID = 0;
-
+    let socket;
     start(wsLocation);
 
     function start(websocketServerLocation) {
-        let socket = new WebSocket(websocketServerLocation);
+        if (socket && socket.readyState === WebSocket.OPEN) return;
+
+        socket = new WebSocket(websocketServerLocation);
 
         socket.addEventListener('open', () => {
             fetch("/initContent").then(it => it.json().then(text => text.forEach(it => wordSet.add(it))));
-            if (window.timerID) {
-                window.clearInterval(window.timerID);
-                window.timerID = 0;
-            }
             socket.send('startReceiving');
         });
 
@@ -61,7 +58,7 @@
             wordCurrentSet.push(event.data);
         });
 
-        socket.addEventListener('close', () => {
+        socket.addEventListener('error', () => {
             if (!window.timerID) {
                 window.timerID = setInterval(function () {
                     start(wsLocation)
@@ -69,4 +66,13 @@
             }
         })
     }
+
+    window.onfocus = () => {
+        start(wsLocation);
+    };
+
+    window.onblur = () => {
+        console.log("closed");
+        socket.close();
+    };
 </script>

@@ -3,6 +3,7 @@ import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.WebSocketSession
 import io.ktor.http.cio.websocket.close
 import io.netty.util.internal.ConcurrentSet
+import kotlinx.coroutines.channels.ClosedSendChannelException
 
 private val registeredSessions = ConcurrentSet<WebSocketSession>()
 
@@ -19,8 +20,12 @@ suspend fun broadcast(msg: String) {
         try {
             it.send(Frame.Text(msg))
         } catch (e: Exception) {
-            it.close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, "${e.message}"))
-            unRegisterSession(it)
+            try {
+                it.close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, "${e.message}"))
+            } catch (e: ClosedSendChannelException) {
+            } finally {
+                unRegisterSession(it)
+            }
         }
     }
 }
