@@ -18,7 +18,7 @@
     let fontsCurrentSet = copyShuffle(avalFonts);
     let colorsCurrentSet = copyShuffle(avalColors);
 
-    fetch("http://localhost:8282/initContent").then(
+    fetch("/initContent").then(
         it => it.json().then(text => wordSet.push(...text))
     );
 
@@ -31,7 +31,7 @@
         elem.innerText = wordCurrentSet.pop();
     }, 429);
 
-    const socket = new WebSocket('ws://localhost:8282/msgChannel');
+    const socket = new WebSocket(`ws://${window.location.host}/msgChannel`);
 
     socket.addEventListener('open', () => {
         socket.send('startReceiving');

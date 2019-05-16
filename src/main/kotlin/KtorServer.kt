@@ -51,7 +51,7 @@ fun initServer() {
                 files(File("static\\web"))
             }
             get("/initContent") {
-                call.respond(prevMsg.toList())
+                call.respond(prevMsg)
             }
             post("/callbackVk") {
                 val msg = call.receive<VkMsg>().msgBody
