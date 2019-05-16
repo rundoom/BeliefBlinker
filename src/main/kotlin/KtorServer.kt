@@ -52,7 +52,7 @@ fun initServer() {
             get("/initContent") {
                 call.respond(prevMsg)
             }
-            get("/allFonts"){
+            get("/allFonts") {
                 call.respond(File("static\\web\\fonts").list())
             }
             post("/callbackVk") {
@@ -60,11 +60,11 @@ fun initServer() {
                 when (msg.type) {
                     MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, "b8c3a40a")
                     MsgType.MESSAGE_NEW -> {
-                        broadcast(msg.msgBody.text)
+                        broadcast(chunkSym(msg.msgBody.text))
                         call.respond(HttpStatusCode.OK, "ok")
                     }
                     MsgType.WALL_REPLY_NEW -> {
-                        broadcast(msg.msgBody.text)
+                        broadcast(chunkSym(msg.msgBody.text))
                         call.respond(HttpStatusCode.OK, "ok")
                     }
                 }
