@@ -38,6 +38,8 @@
         elem.style.fontFamily = fontsCurrentSet.pop();
         elem.style.color = colorsCurrentSet.pop();
         elem.innerText = wordCurrentSet.pop();
+        let longestWord = elem.innerText.split(/[\s\n]/).reduce((a, b) => a.length > b.length ? a : b);
+        elem.style.fontSize = `${Math.min(20,90 / longestWord.length)}vw`
     }, 429);
 
     let socket;
@@ -49,7 +51,6 @@
         socket = new WebSocket(websocketServerLocation);
 
         socket.addEventListener('open', () => {
-            fetch("/initContent").then(it => it.json().then(text => text.forEach(it => wordSet.add(it))));
             socket.send('startReceiving');
         });
 
@@ -59,12 +60,14 @@
         });
 
         socket.addEventListener('error', () => {
-            if (!window.timerID) {
-                window.timerID = setInterval(function () {
-                    start(wsLocation)
-                }, 5000);
+            start(websocketServerLocation)
+        });
+
+        socket.addEventListener('close', () => {
+            if (document.hasFocus()) {
+                start(websocketServerLocation)
             }
-        })
+        });
     }
 
     window.onfocus = () => {

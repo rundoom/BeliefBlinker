@@ -49,23 +49,19 @@ fun initServer() {
             static("static") {
                 files(File("static\\web"))
             }
-            get("/initContent") {
-                call.respond(prevMsg)
-            }
             get("/allFonts") {
                 call.respond(File("static\\web\\fonts").list())
             }
             post("/callbackVk") {
                 val msg = call.receive<VkMsg>()
+                call.respond(HttpStatusCode.OK, "ok")
                 when (msg.type) {
                     MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, "b8c3a40a")
                     MsgType.MESSAGE_NEW -> {
-                        broadcast(chunkSym(msg.msgBody.text))
-                        call.respond(HttpStatusCode.OK, "ok")
+                        if(msg.msgBody.text.length <= 50) broadcast(msg.msgBody.text)
                     }
                     MsgType.WALL_REPLY_NEW -> {
-                        broadcast(chunkSym(msg.msgBody.text))
-                        call.respond(HttpStatusCode.OK, "ok")
+                        if(msg.msgBody.text.length <= 50) broadcast(msg.msgBody.text)
                     }
                 }
             }
@@ -75,6 +71,9 @@ fun initServer() {
                         when (frame.readText()) {
                             "startReceiving" -> {
                                 registerSession(this)
+                                prevMsg.forEach {
+                                    outgoing.send(Frame.Text(it))
+                                }
                             }
                             else -> close(CloseReason(CloseReason.Codes.NORMAL, "Closed"))
                         }
