@@ -34,26 +34,31 @@
 
     let timerID = 0;
 
-    const socket = new WebSocket(wsLocation);
+    start(wsLocation);
 
-    socket.addEventListener('open', () => {
-        if (window.timerID) {
-            window.clearInterval(window.timerID);
-            window.timerID = 0;
-        }
-        socket.send('startReceiving');
-    });
+    function start(websocketServerLocation){
+        let socket = new WebSocket(websocketServerLocation);
 
-    socket.addEventListener('message', event => {
-        wordSet.push(event.data);
-        wordCurrentSet.push(event.data);
-    });
+        socket.addEventListener('open', () => {
+            if (window.timerID) {
+                window.clearInterval(window.timerID);
+                window.timerID = 0;
+            }
+            socket.send('startReceiving');
+        });
 
-    socket.addEventListener('close', () => {
-        if (!window.timerID) {
-            window.timerID = setInterval(function () {
-                socket.start(wsLocation)
-            }, 5000);
-        }
-    })
+        socket.addEventListener('message', event => {
+            wordSet.push(event.data);
+            wordCurrentSet.push(event.data);
+        });
+
+
+        socket.addEventListener('close', () => {
+            if (!window.timerID) {
+                window.timerID = setInterval(function () {
+                    start(wsLocation)
+                }, 5000);
+            }
+        })
+    }
 </script>
