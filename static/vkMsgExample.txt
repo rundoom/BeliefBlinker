@@ -1,0 +1,2 @@
+{"type":"message_new","object":{"date":1557975737,"from_id":208354721,"id":27,"out":0,"peer_id":208354721,"text":"ÑÐ°Ð·","conversation_message_id":27,"fwd_messages":[],"important":false,"random_id":0,"attachments":[],"is_hidden":false},"group_id":181772679,"secret":"Pf5Y0SIhYe8HA4Wv"}
+{"type":"wall_reply_new","object":{"id":4,"from_id":208354721,"post_id":1,"owner_id":-181772679,"parents_stack":[],"date":1557975792,"text":"ÑÑÑ","thread":{"count":0},"post_owner_id":-181772679},"group_id":181772679,"secret":"Pf5Y0SIhYe8HA4Wv"}
