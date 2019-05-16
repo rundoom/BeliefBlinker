@@ -47,11 +47,11 @@ fun initServer() {
                 files(File("static\\web"))
             }
             get("/initContent") {
-                call.respond(listOf("раз", "два", "три"))
+                call.respond(listOf<String>())
             }
             post("/callbackVk") {
-                sendAll(call.receiveText())
-                call.respond(HttpStatusCode.OK)
+//                sendAll(call.receiveText())
+                call.respond(HttpStatusCode.OK, "b8c3a40a")
             }
             webSocket("/msgChannel") {
                 for (frame in incoming) {
