@@ -4,13 +4,26 @@
 </body>
 
 <script>
+    const avalFonts = [];
+
+    fetch("/allFonts").then(
+        it => it.json().then(
+            fonts => fonts.forEach(font => {
+                    new FontFace(font.split('.').slice(0, -1).join('.'), `url(fonts/${font})`).load().then(loaded_face => {
+                        document.fonts.add(loaded_face);
+                        avalFonts.push(loaded_face.family)
+                    });
+                }
+            )
+        )
+    );
+
     let copyShuffle = it => [...it].sort(() => Math.random() - 0.5);
 
     const elem = document.querySelector(".blink_me");
 
     const wordSet = new Set(["вера"]);
 
-    const avalFonts = ["BukhariScript-Regular", "CRL____", "Dobrozrachniy-Regular", "Ekran-font", "FXC", "GUERRILLA-Normal", "Hermann-Gotisch_NormalC", "LATINWID", "LineaturaSemibold", "MADE_TheArtist_Sans_PERSONAL_USE", "NeueMachina-Ultrabold", "Oks_Free", "Peace_Sans", "Perfograma", "POSTER", "PRAGHW3", "ProUN", "Queen_of_Clubs", "RodchenkoCTT_Regular", "Silverfake", "Soyuz_Grotesk_Bold", "Start_Normal", "Stiff_Staff", "TOO"];
     const avalColors = ["FFFF33", "FFFF00", "CCCC00", "FF9900", "FF6600", "FF3300", "FF0000", "FF0033", "FF0066", "FF0099", "FF00CC", "FF00FF", "CC00CC", "CC00FF", "9900FF", "6600FF", "0033FF", "00CCFF", "33FFFF", "33FFCC", "00FF99", "33FF66", "00FF33", "99FF33", "CCFF00", "CCCC33"];
     const wsLocation = `ws://${window.location.host}/msgChannel`;
 

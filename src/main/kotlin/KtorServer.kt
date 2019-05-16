@@ -52,6 +52,9 @@ fun initServer() {
             get("/initContent") {
                 call.respond(prevMsg)
             }
+            get("/allFonts"){
+                call.respond(File("static\\web\\fonts").list())
+            }
             post("/callbackVk") {
                 val msg = call.receive<VkMsg>()
                 when (msg.type) {
