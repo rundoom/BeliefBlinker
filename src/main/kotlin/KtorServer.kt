@@ -15,7 +15,6 @@ import io.ktor.http.cio.websocket.readText
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.request.receive
-import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
@@ -55,7 +54,7 @@ fun initServer() {
             }
             post("/callbackVk") {
                 val msg = call.receive<VkMsg>().msgBody
-                if (msg.text.length < 50) sendAll(msg.text)
+                if (msg.text.length < 50) broadcast(msg.text)
                 call.respond(HttpStatusCode.OK, "ok")
             }
             webSocket("/msgChannel") {
@@ -63,10 +62,13 @@ fun initServer() {
                     if (frame is Frame.Text) {
                         when (frame.readText()) {
                             "startReceiving" -> {
-                                registerChannel(outgoing)
+                                registerSession(this)
                             }
                             else -> close(CloseReason(CloseReason.Codes.NORMAL, "Closed"))
                         }
+                    } else if (frame is Frame.Close) {
+                        close(CloseReason(CloseReason.Codes.NORMAL, "Closed"))
+                        unRegisterSession(this)
                     }
                 }
             }

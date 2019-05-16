@@ -1,22 +1,26 @@
+import io.ktor.http.cio.websocket.CloseReason
 import io.ktor.http.cio.websocket.Frame
+import io.ktor.http.cio.websocket.WebSocketSession
+import io.ktor.http.cio.websocket.close
 import io.netty.util.internal.ConcurrentSet
-import kotlinx.coroutines.channels.SendChannel
 
-private val registeredChannels = ConcurrentSet<SendChannel<Frame>>()
+private val registeredSessions = ConcurrentSet<WebSocketSession>()
+
 val prevMsg = ConcurrentSet<String>()
 
 
-fun registerChannel(chanel: SendChannel<Frame>) {
-    registeredChannels.add(chanel)
-}
+fun registerSession(chanel: WebSocketSession) = registeredSessions.add(chanel)
 
-suspend fun sendAll(msg: String){
+fun unRegisterSession(chanel: WebSocketSession) = registeredSessions.remove(chanel)
+
+suspend fun broadcast(msg: String) {
     prevMsg.add(msg)
-    registeredChannels.forEach {
+    registeredSessions.forEach {
         try {
             it.send(Frame.Text(msg))
-        } catch (e: Exception){
-            registeredChannels.remove(it)
+        } catch (e: Exception) {
+            it.close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, "${e.message}"))
+            unRegisterSession(it)
         }
     }
 }

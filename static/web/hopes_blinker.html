@@ -13,6 +13,7 @@
 
     const avalFonts = ["BukhariScript-Regular", "CRL____", "Dobrozrachniy-Regular", "Ekran-font", "FXC", "GUERRILLA-Normal", "Hermann-Gotisch_NormalC", "LATINWID", "LineaturaSemibold", "MADE_TheArtist_Sans_PERSONAL_USE", "NeueMachina-Ultrabold", "Oks_Free", "Peace_Sans", "Perfograma", "POSTER", "PRAGHW3", "ProUN", "Queen_of_Clubs", "RodchenkoCTT_Regular", "Silverfake", "Soyuz_Grotesk_Bold", "Start_Normal", "Stiff_Staff", "TOO"];
     const avalColors = ["FFFF33", "FFFF00", "CCCC00", "FF9900", "FF6600", "FF3300", "FF0000", "FF0033", "FF0066", "FF0099", "FF00CC", "FF00FF", "CC00CC", "CC00FF", "9900FF", "6600FF", "0033FF", "00CCFF", "33FFFF", "33FFCC", "00FF99", "33FF66", "00FF33", "99FF33", "CCFF00", "CCCC33"];
+    const wsLocation = `ws://${window.location.host}/msgChannel`;
 
     let wordCurrentSet = copyShuffle(wordSet);
     let fontsCurrentSet = copyShuffle(avalFonts);
@@ -31,9 +32,15 @@
         elem.innerText = wordCurrentSet.pop();
     }, 429);
 
-    const socket = new WebSocket(`ws://${window.location.host}/msgChannel`);
+    let timerID = 0;
+
+    const socket = new WebSocket(wsLocation);
 
     socket.addEventListener('open', () => {
+        if (window.timerID) {
+            window.clearInterval(window.timerID);
+            window.timerID = 0;
+        }
         socket.send('startReceiving');
     });
 
@@ -41,4 +48,12 @@
         wordSet.push(event.data);
         wordCurrentSet.push(event.data);
     });
+
+    socket.addEventListener('close', () => {
+        if (!window.timerID) {
+            window.timerID = setInterval(function () {
+                socket.start(wsLocation)
+            }, 5000);
+        }
+    })
 </script>
