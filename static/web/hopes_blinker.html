@@ -31,6 +31,10 @@
     let fontsCurrentSet = copyShuffle(avalFonts);
     let colorsCurrentSet = copyShuffle(avalColors);
 
+    fetch("/initContent").then(
+        it => it.json().then(text => text.forEach(it => wordSet.add(it)))
+    );
+
     setInterval(() => {
         if (wordCurrentSet.length === 0) wordCurrentSet = copyShuffle(wordSet);
         if (fontsCurrentSet.length === 0) fontsCurrentSet = copyShuffle(avalFonts);
@@ -40,33 +44,14 @@
         elem.innerText = wordCurrentSet.pop();
     }, 429);
 
-    let timerID = 0;
+    const socket = new WebSocket(`ws://${window.location.host}/msgChannel`);
 
-    start(wsLocation);
+    socket.addEventListener('open', () => {
+        socket.send('startReceiving');
+    });
 
-    function start(websocketServerLocation) {
-        let socket = new WebSocket(websocketServerLocation);
-
-        socket.addEventListener('open', () => {
-            fetch("/initContent").then(it => it.json().then(text => text.forEach(it => wordSet.add(it))));
-            if (window.timerID) {
-                window.clearInterval(window.timerID);
-                window.timerID = 0;
-            }
-            socket.send('startReceiving');
-        });
-
-        socket.addEventListener('message', event => {
-            wordSet.push(event.data);
-            wordCurrentSet.push(event.data);
-        });
-
-        socket.addEventListener('close', () => {
-            if (!window.timerID) {
-                window.timerID = setInterval(function () {
-                    start(wsLocation)
-                }, 5000);
-            }
-        })
-    }
+    socket.addEventListener('message', event => {
+        wordSet.add(event.data);
+        wordCurrentSet.push(event.data);
+    });
 </script>

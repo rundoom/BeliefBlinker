@@ -78,9 +78,6 @@ fun initServer() {
                             }
                             else -> close(CloseReason(CloseReason.Codes.NORMAL, "Closed"))
                         }
-                    } else if (frame is Frame.Close) {
-                        close(CloseReason(CloseReason.Codes.NORMAL, "Closed"))
-                        unRegisterSession(this)
                     }
                 }
             }

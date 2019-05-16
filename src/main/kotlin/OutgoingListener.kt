@@ -19,8 +19,13 @@ suspend fun broadcast(msg: String) {
         try {
             it.send(Frame.Text(msg))
         } catch (e: Exception) {
-            it.close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, "${e.message}"))
-            unRegisterSession(it)
+            try {
+                it.close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, "${e.message}"))
+            } catch (e: Exception){
+                log.info(e.message)
+            } finally {
+                unRegisterSession(it)
+            }
         }
     }
 }
