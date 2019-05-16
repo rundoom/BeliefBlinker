@@ -53,9 +53,18 @@ fun initServer() {
                 call.respond(prevMsg)
             }
             post("/callbackVk") {
-                val msg = call.receive<VkMsg>().msgBody
-                if (msg.text.length < 50) broadcast(msg.text)
-                call.respond(HttpStatusCode.OK, "ok")
+                val msg = call.receive<VkMsg>()
+                when (msg.type) {
+                    MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, "b8c3a40a")
+                    MsgType.MESSAGE_NEW -> {
+                        broadcast(msg.msgBody.text)
+                        call.respond(HttpStatusCode.OK, "ok")
+                    }
+                    MsgType.WALL_REPLY_NEW -> {
+                        broadcast(msg.msgBody.text)
+                        call.respond(HttpStatusCode.OK, "ok")
+                    }
+                }
             }
             webSocket("/msgChannel") {
                 for (frame in incoming) {

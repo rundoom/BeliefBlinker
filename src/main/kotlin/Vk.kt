@@ -12,7 +12,10 @@ enum class MsgType {
     MESSAGE_NEW,
 
     @SerializedName("wall_reply_new")
-    WALL_REPLY_NEW
+    WALL_REPLY_NEW,
+
+    @SerializedName("confirmation")
+    CONFIRMATION
 }
 
 data class VkMsgBody(
