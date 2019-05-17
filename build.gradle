@@ -39,6 +39,11 @@ jar {
         from 'config.properties'
         into "${libsDir.path}"
     }
+
+    copy {
+        from 'run.cmd'
+        into "${libsDir.path}"
+    }
 }
 
 compileKotlin {
