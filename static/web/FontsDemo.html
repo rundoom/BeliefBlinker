@@ -1,0 +1,22 @@
+<body>
+
+</body>
+
+<script>
+    let body = document.querySelector("body");
+    fetch("/allFonts").then(
+        it => it.json().then(
+            fonts => fonts.forEach(font => {
+                    new FontFace(font.split('.').slice(0, -1).join('.'), `url(fonts/${font})`).load().then(loaded_face => {
+                        document.fonts.add(loaded_face);
+                        let newElem = document.createElement("span");
+                        newElem.style.fontFamily = loaded_face.family;
+                        newElem.style.fontSize = "50px";
+                        newElem.innerText = `Демо шрифта Font Demo: ${loaded_face.family}`;
+                        body.appendChild(newElem);
+                        body.appendChild(document.createElement("br"));
+                    });
+                }
+            )
+        )
+    );</script>

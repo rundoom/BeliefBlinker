@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    #container {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Word Adder</title>
+
+</head>
+<body>
+<div id="container">
+    <input type="text" id="word-input">
+    <input type="button" id="submit" value="Добавить слово">
+</div>
+<script>
+    const btn = document.querySelector("#submit");
+    const inp = document.querySelector("#word-input");
+
+    btn.addEventListener("click", () => {
+        addWord();
+        inp.value = ""
+    });
+
+    function addWord() {
+        fetch("/callbackVk", {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                "type": "message_new",
+                "object": {
+                    "from_id": 0,
+                    "text": inp.value,
+                },
+                "group_id": 0,
+                "secret": "0"
+            })
+        })
+    }
+</script>
+</body>
+</html>
