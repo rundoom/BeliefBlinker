@@ -15,19 +15,34 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile 'io.ktor:ktor-server-netty:1.1.4'
-    implementation "io.ktor:ktor-websockets:1.1.4"
+    compile "io.ktor:ktor-websockets:1.1.4"
     compile "io.ktor:ktor-gson:1.1.4"
     compile 'org.slf4j:slf4j-simple:1.7.26'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+sourceSets {
+    main.kotlin.srcDirs = [ 'src' ]
+    test.kotlin.srcDirs = [ 'test' ]
+}
+
 jar {
     manifest {
-        attributes "Main-Class": "Main"
+        attributes "Main-Class": "MainKt"
     }
 
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    copy {
+        from 'static'
+        into "${libsDir.path}/static"
+    }
+
+    copy {
+        from 'config.properties'
+        into "${libsDir.path}"
     }
 }
 

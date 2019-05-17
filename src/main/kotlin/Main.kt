@@ -1,3 +1,1 @@
-fun main() {
-    initServer()
-}
+fun main() = initServer()

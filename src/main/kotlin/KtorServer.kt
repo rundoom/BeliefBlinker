@@ -23,13 +23,15 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.websocket.WebSockets
 import io.ktor.websocket.webSocket
+import main.kotlin.internalPort
+import main.kotlin.respondSecret
 import org.slf4j.LoggerFactory.getLogger
 import java.io.File
 
 val log = getLogger(System::class.java)
 
 fun initServer() {
-    embeddedServer(Netty, port = 8282) {
+    embeddedServer(Netty, port = internalPort) {
         install(CORS) {
             anyHost()
         }
@@ -55,7 +57,7 @@ fun initServer() {
             post("/callbackVk") {
                 val msg = call.receive<VkMsg>()
                 when (msg.type) {
-                    MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, "9d3f491f")
+                    MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, respondSecret)
                     MsgType.MESSAGE_NEW -> {
                         call.respond(HttpStatusCode.OK, "ok")
                         if(msg.msgBody.text.length <= 50) broadcast(msg.msgBody.text)
