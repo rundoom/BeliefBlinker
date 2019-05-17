@@ -22,7 +22,7 @@
 
     const elem = document.querySelector(".blink_me");
 
-    const wordSet = new Set(["вера"]);
+    const wordSet = new Set(["Любовь", "Путина", "биткоин", "Коммунизм", "Вино", "Себя", "Прекрасную Россию Будущего", "Телевизор", "Силу земли", "Бога", "Человечество", "Искусственный интеллект", "Современное искусство", "Превосходство духа над материей"]);
 
     const avalColors = ["FFFF33", "FFFF00", "CCCC00", "FF9900", "FF6600", "FF3300", "FF0000", "FF0033", "FF0066", "FF0099", "FF00CC", "FF00FF", "CC00CC", "CC00FF", "9900FF", "6600FF", "0033FF", "00CCFF", "33FFFF", "33FFCC", "00FF99", "33FF66", "00FF33", "99FF33", "CCFF00", "CCCC33"];
     const wsLocation = `ws://${window.location.host}/msgChannel`;
@@ -39,7 +39,7 @@
         elem.style.color = colorsCurrentSet.pop();
         elem.innerText = wordCurrentSet.pop();
         let longestWord = elem.innerText.split(/[\s\n]/).reduce((a, b) => a.length > b.length ? a : b);
-        elem.style.fontSize = `${Math.min(20,90 / longestWord.length)}vw`
+        elem.style.fontSize = `${Math.min(15,90 / longestWord.length)}vw`
     }, 429);
 
     let socket;

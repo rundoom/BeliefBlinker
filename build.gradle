@@ -21,11 +21,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-sourceSets {
-    main.kotlin.srcDirs = [ 'src' ]
-    test.kotlin.srcDirs = [ 'test' ]
-}
-
 jar {
     manifest {
         attributes "Main-Class": "MainKt"
