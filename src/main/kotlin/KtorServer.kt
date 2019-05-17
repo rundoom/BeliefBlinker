@@ -54,13 +54,14 @@ fun initServer() {
             }
             post("/callbackVk") {
                 val msg = call.receive<VkMsg>()
-                call.respond(HttpStatusCode.OK, "ok")
                 when (msg.type) {
-                    MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, "b8c3a40a")
+                    MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, "9d3f491f")
                     MsgType.MESSAGE_NEW -> {
+                        call.respond(HttpStatusCode.OK, "ok")
                         if(msg.msgBody.text.length <= 50) broadcast(msg.msgBody.text)
                     }
                     MsgType.WALL_REPLY_NEW -> {
+                        call.respond(HttpStatusCode.OK, "ok")
                         if(msg.msgBody.text.length <= 50) broadcast(msg.msgBody.text)
                     }
                 }
