@@ -7,18 +7,19 @@ import kotlinx.coroutines.channels.ClosedSendChannelException
 
 private val registeredSessions = ConcurrentSet<WebSocketSession>()
 
-val prevMsg = ConcurrentSet<String>()
+val prevMsgCache = ConcurrentSet<VkMsg>().also { it.addAll(startSet) }
 
 
 fun registerSession(chanel: WebSocketSession) = registeredSessions.add(chanel)
 
 fun unRegisterSession(chanel: WebSocketSession) = registeredSessions.remove(chanel)
 
-suspend fun broadcast(msg: String) {
-    prevMsg.add(msg)
+suspend fun broadcast(msg: VkMsg) {
+    prevMsgCache.add(msg)
+
     registeredSessions.forEach {
         try {
-            it.send(Frame.Text(msg))
+            it.send(Frame.Text(gson.toJson(msg)))
         } catch (e: Exception) {
             try {
                 it.close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, "${e.message}"))

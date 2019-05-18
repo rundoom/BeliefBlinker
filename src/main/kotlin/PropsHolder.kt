@@ -1,16 +1,14 @@
-package main.kotlin
-
+import com.google.gson.JsonParser
 import java.io.File
-import java.util.*
 
-val props = Properties().apply {
-    val confFile = File("config.properties")
-    if (confFile.exists()) load(confFile.inputStream())
-    else {
-        val resourcePath = System::class.java.getResource("/config.properties").path
-        load(File(resourcePath).inputStream())
-    }
+
+var parser = JsonParser()
+
+val props = parser.parse(File("properties.json").readText()).asJsonObject
+
+val internalPort = props["internalPort"].asInt
+val respondSecret = props["respondSecret"].asString
+val filteredPosts = props["avaliablePosts"].asJsonArray.toList().map { it.asLong }
+val startSet = props["startingSet"].asJsonArray.toList().map {
+    VkMsg(VkMsgBody(it.asString), MsgType.NO_VK_MSG)
 }
-
-val internalPort = props["internal.port"].toString().toInt()
-val respondSecret = props["respond.secret"].toString()

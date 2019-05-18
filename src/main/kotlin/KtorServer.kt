@@ -1,3 +1,4 @@
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import io.ktor.application.call
 import io.ktor.application.install
@@ -23,12 +24,11 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.websocket.WebSockets
 import io.ktor.websocket.webSocket
-import main.kotlin.internalPort
-import main.kotlin.respondSecret
 import org.slf4j.LoggerFactory.getLogger
 import java.io.File
 
 val log = getLogger(System::class.java)
+val gson = Gson()
 
 fun initServer() {
     embeddedServer(Netty, port = internalPort) {
@@ -60,11 +60,22 @@ fun initServer() {
                     MsgType.CONFIRMATION -> call.respond(HttpStatusCode.OK, respondSecret)
                     MsgType.MESSAGE_NEW -> {
                         call.respond(HttpStatusCode.OK, "ok")
-                        if(msg.msgBody.text.length <= 50) broadcast(msg.msgBody.text)
+                        if (msg.msgBody.text.length <= 50) broadcast(msg)
                     }
                     MsgType.WALL_REPLY_NEW -> {
                         call.respond(HttpStatusCode.OK, "ok")
-                        if(msg.msgBody.text.length <= 50) broadcast(msg.msgBody.text)
+                        if (msg.msgBody.text.length <= 50 && (msg.msgBody.postId in filteredPosts))
+                            broadcast(msg)
+                    }
+                    MsgType.WALL_REPLY_DELETE -> {
+                        call.respond(HttpStatusCode.OK, "ok")
+                        broadcast(msg)
+                    }
+                    MsgType.NO_VK_MSG -> {
+                        call.respond(HttpStatusCode.OK, "ok")
+                        broadcast(msg)
+                    }
+                    null -> {
                     }
                 }
             }
@@ -74,8 +85,8 @@ fun initServer() {
                         when (frame.readText()) {
                             "startReceiving" -> {
                                 registerSession(this)
-                                prevMsg.forEach {
-                                    outgoing.send(Frame.Text(it))
+                                prevMsgCache.forEach {
+                                    outgoing.send(Frame.Text(gson.toJson(it)))
                                 }
                             }
                             else -> close(CloseReason(CloseReason.Codes.NORMAL, "Closed"))
