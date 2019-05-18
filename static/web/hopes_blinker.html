@@ -57,15 +57,30 @@
 
         socket.addEventListener('message', event => {
                 let msgObj = JSON.parse(event.data);
-                let key = [msgObj.object.id, msgObj.object.post_id, msgObj.object.from_id];
-                if ("wall_reply_delete" === msgObj.type) {
-                    bannedMsgIds.add(key);
-                    delete msgCache[key]
-                } else if ("no_vk_msg" === msgObj.type) {
-                    msgCache[msgObj.object.text] = msgObj.object.text.toUpperCase()
-                } else {
-                    if (!bannedMsgIds.has(key))
-                        msgCache[key] = msgObj.object.text.toUpperCase();
+                let key;
+                let msgTextUpper = msgObj.object.text.toUpperCase();
+                switch (msgObj.type) {
+                    case "wall_reply_delete":
+                        key = ["wall_reply_new", msgObj.object.id, msgObj.object.post_id];
+                        bannedMsgIds.add(key);
+                        delete msgCache[key];
+                        break;
+                    case "no_vk_msg":
+                        msgCache[msgObj.object.text] = msgTextUpper;
+                        wordCurrentSet.push(msgTextUpper);
+                        break;
+                    case "wall_reply_new":
+                        key = ["wall_reply_new", msgObj.object.id, msgObj.object.post_id];
+                        if (!bannedMsgIds.has(key)) {
+                            msgCache[key] = msgTextUpper;
+                            wordCurrentSet.push(msgTextUpper);
+                        }
+                        break;
+                    case "message_new":
+                        if (!bannedMsgIds.has(key))
+                            key = ["message_new", msgObj.object.id, msgObj.object.from_id];
+                        msgCache[key] = msgTextUpper;
+                        break;
                 }
             }
         );
